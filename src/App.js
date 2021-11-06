@@ -8,6 +8,7 @@ class App extends React.Component {
 
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSaveButtonClick = this.handleSaveButtonClick.bind(this);
+    this.handleDeleteButtonClick = this.handleDeleteButtonClick.bind(this);
 
     this.state = {
       cardName: '',
@@ -70,6 +71,13 @@ class App extends React.Component {
         cards: [...cards, card],
       };
     });
+  }
+
+  handleDeleteButtonClick(cardToBeDeleted) {
+    this.setState((state) => ({
+      cards: state.cards.filter((card) => card !== cardToBeDeleted),
+      hasTrunfo: state.hasTrunfo && !cardToBeDeleted.cardTrunfo,
+    }));
   }
 
   validateForm() {
@@ -141,17 +149,25 @@ class App extends React.Component {
         />
         {
           cards.map((card) => (
-            <Card
-              cardName={ card.cardName }
-              cardDescription={ card.cardDescription }
-              cardAttr1={ card.cardAttr1 }
-              cardAttr2={ card.cardAttr2 }
-              cardAttr3={ card.cardAttr3 }
-              cardImage={ card.cardImage }
-              cardRare={ card.cardRare }
-              cardTrunfo={ card.cardTrunfo }
-              key={ card.cardName }
-            />
+            <div key={ card.cardName }>
+              <Card
+                cardName={ card.cardName }
+                cardDescription={ card.cardDescription }
+                cardAttr1={ card.cardAttr1 }
+                cardAttr2={ card.cardAttr2 }
+                cardAttr3={ card.cardAttr3 }
+                cardImage={ card.cardImage }
+                cardRare={ card.cardRare }
+                cardTrunfo={ card.cardTrunfo }
+              />
+              <button
+                type="button"
+                onClick={ () => this.handleDeleteButtonClick(card) }
+                data-testid="delete-button"
+              >
+                Excluir
+              </button>
+            </div>
           ))
         }
       </>
