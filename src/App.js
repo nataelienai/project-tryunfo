@@ -7,6 +7,7 @@ class App extends React.Component {
     super();
 
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleSaveButtonClick = this.handleSaveButtonClick.bind(this);
 
     this.state = {
       cardName: '',
@@ -18,6 +19,7 @@ class App extends React.Component {
       cardRare: 'normal',
       cardTrunfo: false,
       isSaveButtonDisabled: true,
+      cards: [],
     };
   }
 
@@ -25,6 +27,45 @@ class App extends React.Component {
     const value = target.type === 'checkbox' ? target.checked : target.value;
 
     this.setState({ [target.name]: value }, this.validateForm);
+  }
+
+  handleSaveButtonClick() {
+    const {
+      cardName,
+      cardDescription,
+      cardAttr1,
+      cardAttr2,
+      cardAttr3,
+      cardImage,
+      cardRare,
+    } = this.state;
+
+    const card = {
+      cardName,
+      cardDescription,
+      cardAttr1,
+      cardAttr2,
+      cardAttr3,
+      cardImage,
+      cardRare,
+    };
+
+    this.setState((state) => {
+      const { cards } = state;
+
+      return {
+        cardName: '',
+        cardDescription: '',
+        cardAttr1: '0',
+        cardAttr2: '0',
+        cardAttr3: '0',
+        cardImage: '',
+        cardRare: 'normal',
+        cardTrunfo: false,
+        isSaveButtonDisabled: true,
+        cards: [...cards, card],
+      };
+    });
   }
 
   validateForm() {
@@ -79,6 +120,7 @@ class App extends React.Component {
           cardTrunfo={ cardTrunfo }
           isSaveButtonDisabled={ isSaveButtonDisabled }
           onInputChange={ this.handleInputChange }
+          onSaveButtonClick={ this.handleSaveButtonClick }
         />
         <Card
           cardName={ cardName }
