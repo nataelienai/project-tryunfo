@@ -10,6 +10,7 @@ class SavedCards extends React.Component {
 
     this.state = {
       nameToFilterBy: '',
+      rarityToFilterBy: '',
     };
   }
 
@@ -19,7 +20,7 @@ class SavedCards extends React.Component {
 
   render() {
     const { cards, handleDeleteButtonClick } = this.props;
-    const { nameToFilterBy } = this.state;
+    const { nameToFilterBy, rarityToFilterBy } = this.state;
 
     return (
       <div>
@@ -30,9 +31,26 @@ class SavedCards extends React.Component {
           onChange={ this.handleInputChange }
           data-testid="name-filter"
         />
+        <select
+          name="rarityToFilterBy"
+          value={ rarityToFilterBy }
+          onChange={ this.handleInputChange }
+          data-testid="rare-filter"
+        >
+          <option value="">todas</option>
+          <option value="normal">normal</option>
+          <option value="raro">raro</option>
+          <option value="muito raro">muito raro</option>
+        </select>
         {
           cards
             .filter(({ cardName }) => cardName.includes(nameToFilterBy))
+            .filter(({ cardRare }) => {
+              if (rarityToFilterBy) {
+                return cardRare === rarityToFilterBy;
+              }
+              return true;
+            })
             .map((card) => (
               <div key={ card.cardName }>
                 <Card
