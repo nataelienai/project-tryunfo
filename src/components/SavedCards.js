@@ -11,16 +11,19 @@ class SavedCards extends React.Component {
     this.state = {
       nameToFilterBy: '',
       rarityToFilterBy: '',
+      filterByTrunfo: false,
     };
   }
 
-  handleInputChange({ target: { name, value } }) {
-    this.setState({ [name]: value });
+  handleInputChange({ target }) {
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+
+    this.setState({ [target.name]: value }, this.validateForm);
   }
 
   render() {
     const { cards, handleDeleteButtonClick } = this.props;
-    const { nameToFilterBy, rarityToFilterBy } = this.state;
+    const { nameToFilterBy, rarityToFilterBy, filterByTrunfo } = this.state;
 
     return (
       <div>
@@ -28,12 +31,14 @@ class SavedCards extends React.Component {
           type="text"
           name="nameToFilterBy"
           value={ nameToFilterBy }
+          disabled={ filterByTrunfo }
           onChange={ this.handleInputChange }
           data-testid="name-filter"
         />
         <select
           name="rarityToFilterBy"
           value={ rarityToFilterBy }
+          disabled={ filterByTrunfo }
           onChange={ this.handleInputChange }
           data-testid="rare-filter"
         >
@@ -42,36 +47,49 @@ class SavedCards extends React.Component {
           <option value="raro">raro</option>
           <option value="muito raro">muito raro</option>
         </select>
+        <label htmlFor="filterByTrunfo">
+          <input
+            type="checkbox"
+            name="filterByTrunfo"
+            id="filterByTrunfo"
+            checked={ filterByTrunfo }
+            onChange={ this.handleInputChange }
+            data-testid="trunfo-filter"
+          />
+          Super Trunfo
+        </label>
         {
-          cards
-            .filter(({ cardName }) => cardName.includes(nameToFilterBy))
-            .filter(({ cardRare }) => {
-              if (rarityToFilterBy) {
-                return cardRare === rarityToFilterBy;
-              }
-              return true;
-            })
-            .map((card) => (
-              <div key={ card.cardName }>
-                <Card
-                  cardName={ card.cardName }
-                  cardDescription={ card.cardDescription }
-                  cardAttr1={ card.cardAttr1 }
-                  cardAttr2={ card.cardAttr2 }
-                  cardAttr3={ card.cardAttr3 }
-                  cardImage={ card.cardImage }
-                  cardRare={ card.cardRare }
-                  cardTrunfo={ card.cardTrunfo }
-                />
-                <button
-                  type="button"
-                  onClick={ () => handleDeleteButtonClick(card) }
-                  data-testid="delete-button"
-                >
-                  Excluir
-                </button>
-              </div>
-            ))
+          (filterByTrunfo
+            ? cards.filter(({ cardTrunfo }) => cardTrunfo === true)
+            : cards
+              .filter(({ cardName }) => cardName.includes(nameToFilterBy))
+              .filter(({ cardRare }) => {
+                if (rarityToFilterBy) {
+                  return cardRare === rarityToFilterBy;
+                }
+                return true;
+              })
+          ).map((card) => (
+            <div key={ card.cardName }>
+              <Card
+                cardName={ card.cardName }
+                cardDescription={ card.cardDescription }
+                cardAttr1={ card.cardAttr1 }
+                cardAttr2={ card.cardAttr2 }
+                cardAttr3={ card.cardAttr3 }
+                cardImage={ card.cardImage }
+                cardRare={ card.cardRare }
+                cardTrunfo={ card.cardTrunfo }
+              />
+              <button
+                type="button"
+                onClick={ () => handleDeleteButtonClick(card) }
+                data-testid="delete-button"
+              >
+                Excluir
+              </button>
+            </div>
+          ))
         }
       </div>
     );
