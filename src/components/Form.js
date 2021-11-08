@@ -12,6 +12,7 @@ class Form extends React.Component {
     if (hasTrunfo) {
       return <p>Você já tem um Super Trunfo em seu baralho</p>;
     }
+
     return (
       <label htmlFor="cardTrunfo">
         <input

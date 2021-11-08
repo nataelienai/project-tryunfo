@@ -1,6 +1,7 @@
 import React from 'react';
 import Card from './components/Card';
 import Form from './components/Form';
+import SavedCards from './components/SavedCards';
 
 class App extends React.Component {
   constructor() {
@@ -147,29 +148,10 @@ class App extends React.Component {
           cardRare={ cardRare }
           cardTrunfo={ cardTrunfo }
         />
-        {
-          cards.map((card) => (
-            <div key={ card.cardName }>
-              <Card
-                cardName={ card.cardName }
-                cardDescription={ card.cardDescription }
-                cardAttr1={ card.cardAttr1 }
-                cardAttr2={ card.cardAttr2 }
-                cardAttr3={ card.cardAttr3 }
-                cardImage={ card.cardImage }
-                cardRare={ card.cardRare }
-                cardTrunfo={ card.cardTrunfo }
-              />
-              <button
-                type="button"
-                onClick={ () => this.handleDeleteButtonClick(card) }
-                data-testid="delete-button"
-              >
-                Excluir
-              </button>
-            </div>
-          ))
-        }
+        <SavedCards
+          cards={ cards }
+          handleDeleteButtonClick={ this.handleDeleteButtonClick }
+        />
       </>
     );
   }
